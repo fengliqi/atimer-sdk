@@ -28,7 +28,7 @@ class Helper
      * @param string $format 显示格式, normal 格式为 Y-m-d H:i:s；format格式为 utc格式
      * @return string|null
      * */
-    static function toUtcTime($time, $format = 'normal')
+    static function toUtcTime($time, $format = 'format')
     {
         if ($format == 'format') {
             $format = 'Y-m-d\TH:i:s.0000\Z';

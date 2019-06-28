@@ -18,5 +18,6 @@
     },
     "license": "MIT",
     "type": "library",
-    "description": "有空日程云SDK"
+    "description": "有空日程云SDK",
+    "minimum-stability": "dev"
 }
