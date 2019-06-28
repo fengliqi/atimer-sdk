@@ -1,0 +1,22 @@
+{
+    "name": "atimer/atimer_sdk",
+    "require": {
+        "php": ">=5.6.0",
+        "ext-curl": "*",
+        "ext-json": "*"
+    },
+    "authors": [
+        {
+            "name": "atimer",
+            "email": "fengliqi@atimer.cn"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "atimer\\": "src/"
+        }
+    },
+    "license": "MIT",
+    "type": "library",
+    "description": "有空日程云SDK"
+}
