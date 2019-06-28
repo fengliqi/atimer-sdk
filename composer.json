@@ -1,5 +1,5 @@
 {
-    "name": "atimer/atimer_sdk",
+    "name": "atimer/atimer-sdk",
     "require": {
         "php": ">=5.6.0",
         "ext-curl": "*",
