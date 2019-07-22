@@ -16,7 +16,7 @@ class Helper
      * @param string $time
      * @return string|null
      * */
-    static function toUtcFormat($time)
+    public static function toUtcFormat($time)
     {
         $time = trim($time);
         return date('Y-m-d\TH:i:s.0000\Z', strtotime($time));
@@ -28,7 +28,7 @@ class Helper
      * @param string $format 显示格式, normal 格式为 Y-m-d H:i:s；format格式为 utc格式
      * @return string|null
      * */
-    static function toUtcTime($time, $format = 'format')
+    public static function toUtcTime($time, $format = 'format')
     {
         if ($format == 'format') {
             $format = 'Y-m-d\TH:i:s.0000\Z';
@@ -49,7 +49,7 @@ class Helper
      * @param int $addDay
      * @return false|string
      */
-    static function toUtcDate($time, $addDay = 0)
+    public static function toUtcDate($time, $addDay = 0)
     {
         $format = 'Y-m-d';
         $timeStamp = strtotime($time) + $addDay * 86400;
@@ -67,7 +67,7 @@ class Helper
      * @param string $timeZone
      * @return false|string|null
      */
-    static function toDate($time, $addDay = 0, $timeZone = '')
+    public static function toDate($time, $addDay = 0, $timeZone = '')
     {
         $format = 'Y-m-d';
         if (empty($timeZone)) {
@@ -81,6 +81,35 @@ class Helper
             date_default_timezone_set($dateZone);
         }
         return $utcTime ? $utcTime : null;
+    }
+
+    /**
+     * 将对象转为数组
+     * @param mixed $array 需要转为数组的变量
+     * @param bool $ignoreNull 判断是否需要
+     * @return array
+     */
+    public static function toArray($array, $ignoreNull = true)
+    {
+        if (is_object($array)) {
+            $array = (array)$array;
+        }
+        if (is_array($array)) {
+            foreach ($array as $k => $v) {
+                if ((is_null($v) || ((is_array($v)) && empty($v))) && $ignoreNull) {
+                    unset($array[$k]);
+                    continue;
+                }
+                $v = self::toArray($v);
+                if (((is_array($v)) && empty($v)) && $ignoreNull) {
+                    unset($array[$k]);
+                    continue;
+                }
+                $array[$k] = $v;
+            }
+        }
+
+        return $array;
     }
 }
 

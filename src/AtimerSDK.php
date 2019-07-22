@@ -2,39 +2,182 @@
 
 namespace atimer;
 
+use atimer\structure\Calendar;
+use atimer\structure\Event;
+
+/**
+ * 有空科技SDK
+ * Class AtimerSDK
+ * @package atimer
+ */
 class AtimerSDK
 {
-    //沙箱环境地址
+    /**
+     * 基础地址
+     */
     const Base = 'atimer.cn/v1/allinone/';
 
-
-    //--------------------------------接口路径---------------------
-    //创建、更新日历
+    /**
+     * 创建、更新日历
+     */
     const PutCalendar = 'putcalendar';
-    //创建、更新事件
+
+    /**
+     * 创建、更新事件
+     */
     const PutEvent = 'putevent';
-    //删除事件
+
+    /**
+     * 删除事件
+     */
     const DeleteEvent = 'deleteevent';
-    //暂停授权
+
+    /**
+     * 暂停授权
+     */
     const Invoke = 'invoke';
-    //取消授权
+
+    /**
+     * 取消授权
+     */
     const Unbind = 'unbind';
-    // =================================end==================
 
-
+    /**
+     * 用户UserCode
+     * @var string
+     */
     protected $userCode = null;
+
+    /**
+     * @var string
+     */
     protected $clientKey = null;
+
+    /**
+     * @var string
+     */
     protected $secret = null;
-    protected $host = null;
+
+    /**
+     * @var string
+     */
+    protected $host = 'open';
+
+    /**
+     * @var bool
+     */
     protected $isLog = false;
 
+    /**
+     * @var int
+     */
     protected $now;
 
-    public function __construct()
+    /**
+     * @var static
+     */
+    protected static $instance = null;
+
+    /**
+     * AtimerSDK constructor.
+     */
+    protected function __construct()
     {
-        $this->now = time();
+
     }
 
+    /**
+     * 获取该实例
+     * @param bool $new 是否生成新的实例
+     * @return static
+     */
+    public static function getInstance($new = false)
+    {
+        if (is_null(static::$instance) || $new) {
+            static::$instance = new static();
+        }
+        static::$instance->now = time();
+        return static::$instance;
+    }
+
+    /**
+     * 设置userCode
+     * @param string $userCode
+     * @return bool
+     */
+    public function setUserCode($userCode)
+    {
+        $this->userCode = (string)$userCode;
+        return true;
+    }
+
+    /**
+     * 设置ClientKey
+     * @param string $clientKey
+     * @return bool
+     */
+    public function setClientKey($clientKey)
+    {
+        if (is_string($clientKey)) {
+            $this->clientKey = $clientKey;
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 设置Secret
+     * @param string $secret
+     * @return bool
+     */
+    public function setSecret($secret)
+    {
+        if (is_string($secret)) {
+            $this->secret = $secret;
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 设置环境，是dev还是sandbox
+     * @param string $host 判断请求的是dev还是open
+     * @return bool
+     */
+    public function setHost($host)
+    {
+        switch ($host) {
+            case 'open':
+                $this->host = 'open';
+                break;
+            case 'sandbox':
+                $this->host = 'sandbox';
+                break;
+            default:
+                return false;
+        }
+        return true;
+    }
+
+    /**
+     * 设置是否需要日志信息
+     * @param bool $isLog
+     * @return bool
+     */
+    public function setIsLog($isLog)
+    {
+        if(is_bool($isLog)){
+            $this->isLog = $isLog;
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 配置参数
+     * @param $property
+     * @param $value
+     */
     public function setConfig($property, $value)
     {
         if (property_exists(self::class, $property)) {
@@ -83,6 +226,7 @@ class AtimerSDK
 
     /**
      * 签名
+     * @return string
      * */
     protected function sign()
     {
@@ -96,7 +240,7 @@ class AtimerSDK
 
     /**
      * 生成Client信息
-     *
+     * @return array
      * */
     protected function makeClient()
     {
@@ -108,6 +252,12 @@ class AtimerSDK
         );
     }
 
+    /**
+     * @param $url
+     * @param string $request
+     * @param string $response
+     * @return void
+     */
     protected function logWrite($url, $request, $response)
     {
         try {
@@ -168,20 +318,20 @@ url:{$url}
             }
             return $result;
         } catch (\Exception $exception) {
-
+            return false;
         }
 
     }
 
     /**
      * 创建日历
-     * @param array $calendar
+     * @param Calendar $calendar
      * @return mixed
      */
-    public function putCalendar($calendar = array())
+    public function putCalendar($calendar)
     {
         $param = [
-            'Calendar' => $calendar
+            'Calendar' => Helper::toArray($calendar)
         ];
         //过滤空值参数
         return $this->uopRequest(self::PutCalendar, $param);
@@ -189,13 +339,13 @@ url:{$url}
 
     /**
      * 创建日程
-     * @param $event
+     * @param Event $event
      * @return mixed
      */
     public function putEvent($event)
     {
         $param = [
-            'Event' => $event
+            'Event' => Helper::toArray($event)
         ];
         return $this->uopRequest(self::PutEvent, $param);
     }
