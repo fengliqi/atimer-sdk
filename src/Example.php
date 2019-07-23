@@ -11,25 +11,41 @@ use atimer\structure\Event;
 use atimer\structure\Reminder;
 use atimer\structure\Time;
 
+/**
+ * SDK示例
+ * Class Example
+ * @package atimer
+ */
 class Example
 {
+    /**
+     * AtimerSDK 的实例
+     * @var AtimerSDK
+     */
     protected $atimer = null;
 
-    public function __construct()
+    /**
+     * Example constructor.
+     * @param array $config
+     */
+    public function __construct($config)
     {
         $this->atimer = AtimerSDK::getInstance();
         //生成日志log
         $this->atimer->setIsLog(true);
         //设置userCode
-        $this->atimer->setUserCode('*****');
+        $this->atimer->setUserCode($config['userCode']);
         //设置secret
-        $this->atimer->setSecret('*****');
+        $this->atimer->setSecret($config['secret']);
         //设置clientKey
-        $this->atimer->setClientKey('*****');
+        $this->atimer->setClientKey($config['clientKey']);
         //设置环境
-        $this->atimer->setHost('open');
+        $this->atimer->setHost($config['host']);
     }
 
+    /**
+     * 添加日程
+     */
     public function addEvent()
     {
         $eventObj = new Event();
@@ -46,6 +62,9 @@ class Example
         var_dump($this->atimer->putEvent($eventObj));
     }
 
+    /**
+     * 添加日历
+     */
     public function putCalendar()
     {
         $calendar = new Calendar();
