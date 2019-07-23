@@ -71,6 +71,4 @@ class Example
         $calendar->CalendarName = '示范日历';
         var_dump($this->atimer->putCalendar($calendar));
     }
-
-
 }

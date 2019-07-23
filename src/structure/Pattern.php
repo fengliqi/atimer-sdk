@@ -3,6 +3,7 @@
 namespace atimer\structure;
 
 /**
+ * 事件频率
  * Class Pattern
  * @package atimer\structure
  */

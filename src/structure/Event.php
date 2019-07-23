@@ -3,6 +3,7 @@
 namespace atimer\structure;
 
 /**
+ * 事件
  * Class Event
  * @package atimer\structure
  */

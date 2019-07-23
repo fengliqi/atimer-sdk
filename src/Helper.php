@@ -1,13 +1,12 @@
 <?php
-/**
- * 自定义的助手类
- * User: liqi.f@qq.com
- * Date: 2019/1/31
- * Time: 16:40
- */
 
 namespace atimer;
 
+/**
+ * 助手类
+ * Class Helper
+ * @package atimer
+ */
 class Helper
 {
     /**
