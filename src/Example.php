@@ -30,7 +30,7 @@ class Example
      */
     public function __construct($config)
     {
-        $this->atimer = AtimerSDK::getInstance();
+        $this->atimer = new AtimerSDK();
         //生成日志log
         $this->atimer->setIsLog(true);
         //设置userCode
@@ -39,8 +39,6 @@ class Example
         $this->atimer->setSecret($config['secret']);
         //设置clientKey
         $this->atimer->setClientKey($config['clientKey']);
-        //设置环境
-        $this->atimer->setHost($config['host']);
     }
 
     /**
@@ -49,7 +47,7 @@ class Example
     public function addEvent()
     {
         $eventObj = new Event();
-        $eventObj->CalendarId = 'cdf9428df4664b13b6cd1351c9520b3f';
+        $eventObj->CalendarId = '5afdde2799bf4fcd8742951f757db139';
         $eventObj->Summary = '日程标题';
         $eventObj->IsAllDay = true;
         $eventObj->Start = new Time('2019-06-28', true, false);
@@ -68,7 +66,31 @@ class Example
     public function putCalendar()
     {
         $calendar = new Calendar();
-        $calendar->CalendarName = '示范日历';
+        $calendar->CalendarName = '1234567';
         var_dump($this->atimer->putCalendar($calendar));
+    }
+
+    /**
+     * 删除日程
+     */
+    public function deleteEvent()
+    {
+        var_dump($this->atimer->deleteEvent('5afdde2799bf4fcd8742951f757db139','dd6417c7ce0341798c29dd2859c43a33'));
+    }
+
+    /**
+     * 删除日历
+     */
+    public function guest()
+    {
+        var_dump($this->atimer->guest());
+    }
+
+    /**
+     * 解除绑定
+     */
+    public function unbind()
+    {
+        var_dump($this->atimer->unbind('*******'));
     }
 }

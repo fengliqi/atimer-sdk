@@ -15,7 +15,7 @@ class AtimerSDK
     /**
      * 基础地址
      */
-    const Base = 'atimer.cn/v1/allinone/';
+    const Base = 'atimer.cn/v2/rest/';
 
     /**
      * 创建、更新日历
@@ -33,11 +33,6 @@ class AtimerSDK
     const DeleteEvent = 'deleteevent';
 
     /**
-     * 暂停授权
-     */
-    const Invoke = 'invoke';
-
-    /**
      * 取消授权
      */
     const Unbind = 'unbind';
@@ -49,41 +44,48 @@ class AtimerSDK
     protected $userCode = null;
 
     /**
+     * 应用key
      * @var string
      */
     protected $clientKey = null;
 
     /**
+     * 应用secret
      * @var string
      */
     protected $secret = null;
 
     /**
+     * 请求前缀
      * @var string
      */
-    protected $host = 'open';
+    protected $host = 'api';
 
     /**
+     * 是否记录
      * @var bool
      */
     protected $isLog = false;
 
     /**
+     * 当前时间戳
      * @var int
      */
     protected $now;
 
     /**
+     * 静态实例
      * @var static
      */
     protected static $instance = null;
 
     /**
+     * 无法直接实例化
      * AtimerSDK constructor.
      */
-    protected function __construct()
+    public function __construct()
     {
-
+        $this->now = time();
     }
 
     /**
@@ -166,7 +168,7 @@ class AtimerSDK
      */
     public function setIsLog($isLog)
     {
-        if(is_bool($isLog)){
+        if (is_bool($isLog)) {
             $this->isLog = $isLog;
             return true;
         }
@@ -210,10 +212,16 @@ class AtimerSDK
         //设置获取的信息以文件流的形式返回，而不是直接输出。
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         if ($type == 'post') {
+            $headers = array(
+                "Content-Type: application/json",
+                "Content-Length: " . strlen($requestDate) . "",
+                "Accept: application/json",
+            );
             //设置post方式提交
             curl_setopt($curl, CURLOPT_POST, 1);
             //设置post数据
             curl_setopt($curl, CURLOPT_POSTFIELDS, $requestDate);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         }
         //执行命令
         $data = curl_exec($curl);
@@ -366,27 +374,12 @@ url:{$url}
     }
 
     /**
-     * 暂停授权第三方账号
-     * @param $profileId
-     * @return mixed
-     */
-    public function invoke($profileId)
-    {
-        $param = [
-            'User' => [
-                'ProfileId' => $profileId,
-            ]
-        ];
-        return $this->uopRequest(self::Invoke, $param);
-    }
-
-    /**
      * 查询账号状态
      * @return bool|mixed|string
      */
     public function guest()
     {
-        $url = "https://{$this->host}.atimer.cn/channel/guest?clientKey={$this->clientKey}&userCode={$this->userCode}";
+        $url = "https://{$this->host}.atimer.cn/Authorize/guest?clientKey={$this->clientKey}&userCode={$this->userCode}";
         $result = $this->curl($url, '', 'get');
         if ($this->isLog) {
             $this->logWrite($url, '', $result);
@@ -402,18 +395,26 @@ url:{$url}
 
     /**
      * 解绑第三方账号
-     * @param $profileId
-     * @param $channelId
+     * @param string $profileId
+     * @param string $channelId
      * @return mixed
      */
-    public function unbind($profileId, $channelId)
+    public function unbind($profileId, $channelId = '')
     {
-        $param = [
-            'User' => [
-                'ProfileId' => $profileId,
-                'ChannelId' => $channelId
-            ]
-        ];
+        if (empty($channelId)) {
+            $param = [
+                'User' => [
+                    'ProfileId' => $profileId
+                ]
+            ];
+        } else {
+            $param = [
+                'User' => [
+                    'ProfileId' => $profileId,
+                    'ChannelId' => $channelId
+                ]
+            ];
+        }
         return $this->uopRequest(self::Unbind, $param);
     }
 }

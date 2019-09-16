@@ -5,6 +5,7 @@ namespace atimer\structure;
 use atimer\Helper;
 
 /**
+ * 时间构造
  * Class Time
  * @package atimer\structure
  */

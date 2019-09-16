@@ -29,22 +29,10 @@ class Calendar
     public $ProfileId;
 
     /**
-     * 日历是否只读
-     * @var bool
-     */
-    public $CalendarReadonly;
-
-    /**
      * 是否是主日历
      * @var bool
      */
     public $CalendarPrimary;
-
-    /**
-     * 是否公开
-     * @var bool
-     */
-    public $IsPublic;
 
     /**
      * 标签
